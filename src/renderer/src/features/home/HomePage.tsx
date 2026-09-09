@@ -1,24 +1,29 @@
-import { useTranslation } from "react-i18next";
-import { useIpcQuery } from "../../hooks/useIpc";
+import { useState } from 'react';
 
 export function HomePage() {
-  const { t } = useTranslation();
-  const version = useIpcQuery("app:getVersion", undefined);
-  const platform = useIpcQuery("app:getPlatform", undefined);
+  const [input, setInput] = useState('');
 
   return (
-    <section className="py-8">
-      <h2 className="text-3xl font-semibold tracking-tight">{t("home.heading")}</h2>
-      <p className="mt-3 max-w-prose text-neutral-600 dark:text-neutral-400">
-        {t("home.description")}
-      </p>
-
-      <dl className="mt-8 grid max-w-md grid-cols-2 gap-4 rounded-lg border border-neutral-200 bg-white p-4 text-sm dark:border-neutral-800 dark:bg-neutral-900">
-        <dt className="text-neutral-500">{t("home.version")}</dt>
-        <dd className="font-mono">{version.data ?? "—"}</dd>
-        <dt className="text-neutral-500">{t("home.platform")}</dt>
-        <dd className="font-mono">{platform.data ?? "—"}</dd>
-      </dl>
-    </section>
+    <div className="flex flex-col h-full">
+      <div className="flex-1 p-4 overflow-y-auto space-y-4">
+        <div className="text-gray-600 dark:text-gray-300">
+          Здесь будут сообщения
+        </div>
+      </div>
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Спросите о коде..."
+            className="flex-1 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50">
+            Отправить
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

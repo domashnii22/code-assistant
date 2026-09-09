@@ -1,22 +1,16 @@
-import { NavLink } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
+import { NavLink } from 'react-router-dom';
 
 const items = [
-  { to: '/', labelKey: 'nav.home' },
-  { to: '/posts', labelKey: 'nav.posts' },
-  { to: '/settings', labelKey: 'nav.settings' },
-  { to: '/about', labelKey: 'nav.about' },
-] as const
+  { to: '/', labelKey: 'Чат' },
+  { to: '/files', labelKey: 'Файлы' },
+  { to: '/settings', labelKey: 'Настройки' },
+] as const;
 
 export function Sidebar() {
-  const { t } = useTranslation()
   return (
     <aside className="flex h-full w-56 flex-col border-r border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
       <div className="drag-region mb-6 px-2 pt-2">
-        <h1 className="text-lg font-semibold">
-          {t('app.title', { projectName: 'code-assistant' })}
-        </h1>
-        <p className="text-xs text-neutral-500">{t('app.tagline')}</p>
+        <h1 className="text-lg font-semibold">Ассистент разработчика</h1>
       </div>
       <nav className="no-drag flex flex-col gap-1">
         {items.map((i) => (
@@ -33,10 +27,10 @@ export function Sidebar() {
               ].join(' ')
             }
           >
-            {t(i.labelKey)}
+            {i.labelKey}
           </NavLink>
         ))}
       </nav>
     </aside>
-  )
+  );
 }
