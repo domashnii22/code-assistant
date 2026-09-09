@@ -5,6 +5,8 @@ import log from 'electron-log';
 import { registerIpcHandlers } from './ipc/index.js';
 import { initUpdater } from './updater.js';
 import { registerNotificationHandlers } from './ipc/notification.handlers.js';
+import { initYandexGPT, registerAIHandlers } from './ipc/ai.handlers.js';
+import 'dotenv/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -57,6 +59,8 @@ function createWindow(): BrowserWindow {
 app.whenReady().then(async () => {
   registerIpcHandlers();
   registerNotificationHandlers();
+  registerAIHandlers();
+  initYandexGPT();
 
   mainWindow = createWindow();
 

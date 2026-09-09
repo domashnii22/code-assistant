@@ -36,6 +36,19 @@ const api = {
 
   showNotification: (params: { title: string; body: string }) =>
     ipcRenderer.invoke('SHOW_NOTIFICATION', params),
+
+  initYandexGPT: (folderId: string, apiKey: string) =>
+    ipcRenderer.invoke('ai:init', { folderId, apiKey }),
+
+  generateText: (prompt: string) => ipcRenderer.invoke('ai:generate', prompt),
+
+  streamText: (prompt: string, onToken: (token: string) => void) => {
+    const listener = (_event: any, token: string) => onToken(token);
+    ipcRenderer.on('ai:token', listener);
+    ipcRenderer.invoke('ai:stream', prompt).finally(() => {
+      ipcRenderer.removeListener('ai:token', listener);
+    });
+  },
 };
 
 export type Api = typeof api;
