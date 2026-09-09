@@ -34,6 +34,8 @@
     "prepare": "husky || true"
   },
   "dependencies": {
+    "@langchain/core": "^1.2.9",
+    "@langchain/yandex": "^1.0.3",
     "@tanstack/react-query": "^5.62.7",
     "@tanstack/react-query-devtools": "^5.62.7",
     "axios": "^1.7.9",
