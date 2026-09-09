@@ -1,7 +1,7 @@
-import { BrowserWindow, app } from "electron";
-import log from "electron-log/main";
-import electronUpdater from "electron-updater";
-import type { IpcEventPayload } from "../shared/ipc-contract.js";
+import { BrowserWindow, app } from 'electron';
+import log from 'electron-log';
+import electronUpdater from 'electron-updater';
+import type { IpcEventPayload } from '../shared/ipc-contract.js';
 
 // `electron-updater` is published as CJS. `esModuleInterop` gives us the full
 // namespace under `default`, so we destructure `autoUpdater` here.
@@ -13,19 +13,23 @@ autoUpdater.autoInstallOnAppQuit = true;
 
 let mainWindow: BrowserWindow | null = null;
 
-function emit(payload: IpcEventPayload<"updater:status">): void {
-  mainWindow?.webContents.send("updater:status", payload);
+function emit(payload: IpcEventPayload<'updater:status'>): void {
+  mainWindow?.webContents.send('updater:status', payload);
 }
 
 export function initUpdater(window: BrowserWindow): void {
   mainWindow = window;
 
-  autoUpdater.on("checking-for-update", () => emit({ state: "checking" }));
-  autoUpdater.on("update-available", (info) => emit({ state: "available", version: info.version }));
-  autoUpdater.on("update-not-available", () => emit({ state: "not-available" }));
-  autoUpdater.on("download-progress", (progress) =>
+  autoUpdater.on('checking-for-update', () => emit({ state: 'checking' }));
+  autoUpdater.on('update-available', (info) =>
+    emit({ state: 'available', version: info.version }),
+  );
+  autoUpdater.on('update-not-available', () =>
+    emit({ state: 'not-available' }),
+  );
+  autoUpdater.on('download-progress', (progress) =>
     emit({
-      state: "downloading",
+      state: 'downloading',
       progress: {
         percent: progress.percent,
         bytesPerSecond: progress.bytesPerSecond,
@@ -34,11 +38,14 @@ export function initUpdater(window: BrowserWindow): void {
       },
     }),
   );
-  autoUpdater.on("update-downloaded", (info) =>
-    emit({ state: "downloaded", version: info.version }),
+  autoUpdater.on('update-downloaded', (info) =>
+    emit({ state: 'downloaded', version: info.version }),
   );
-  autoUpdater.on("error", (err) =>
-    emit({ state: "error", error: err instanceof Error ? err.message : String(err) }),
+  autoUpdater.on('error', (err) =>
+    emit({
+      state: 'error',
+      error: err instanceof Error ? err.message : String(err),
+    }),
   );
 
   // Automatically check for updates 5s after boot in production builds.
@@ -46,14 +53,17 @@ export function initUpdater(window: BrowserWindow): void {
     setTimeout(() => {
       void autoUpdater
         .checkForUpdates()
-        .catch((err) => log.error("[updater] initial check failed", err));
+        .catch((err) => log.error('[updater] initial check failed', err));
     }, 5_000);
   }
 }
 
-export async function checkForUpdates(): Promise<{ updateAvailable: boolean; version?: string }> {
+export async function checkForUpdates(): Promise<{
+  updateAvailable: boolean;
+  version?: string;
+}> {
   if (!app.isPackaged) {
-    log.info("[updater] skipping check in dev mode");
+    log.info('[updater] skipping check in dev mode');
     return { updateAvailable: false };
   }
   const result = await autoUpdater.checkForUpdates();

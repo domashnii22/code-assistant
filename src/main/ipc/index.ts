@@ -1,8 +1,12 @@
-import { app, ipcMain } from "electron";
-import log from "electron-log/main";
-import type { IpcChannel, IpcRequest, IpcResponse } from "../../shared/ipc-contract.js";
-import { storageHandlers } from "./storage.js";
-import { updaterHandlers } from "./updater.js";
+import { app, ipcMain } from 'electron';
+import log from 'electron-log';
+import type {
+  IpcChannel,
+  IpcRequest,
+  IpcResponse,
+} from '../../shared/ipc-contract.js';
+import { storageHandlers } from './storage.js';
+import { updaterHandlers } from './updater.js';
 
 /**
  * Strongly-typed IPC handler definition.
@@ -34,8 +38,8 @@ function register<K extends IpcChannel>(channel: K, handler: Handler<K>): void {
  */
 export function registerIpcHandlers(): void {
   const handlers: HandlerMap = {
-    "app:getVersion": () => app.getVersion(),
-    "app:getPlatform": () => process.platform,
+    'app:getVersion': () => app.getVersion(),
+    'app:getPlatform': () => process.platform,
     ...storageHandlers,
     ...updaterHandlers,
   };
